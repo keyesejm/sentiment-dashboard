@@ -1,36 +1,231 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sentiment Analysis Web Dashboard
 
-## Getting Started
+A full-stack web application that analyzes sentiment of news articles using Claude API and displays results in a beautiful dashboard.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Real-time sentiment analysis** of news articles
+- **News fetching** from NewsData.io free API
+- **Visual dashboard** showing sentiment breakdown with charts
+- **CSV export** for further analysis
+- **Responsive design** for mobile, tablet, and desktop
+- **Vercel deployment** with automatic CI/CD
+
+## Tech Stack
+
+- **Frontend**: Next.js 14, React 18, Tailwind CSS
+- **Backend**: Next.js API Routes (serverless)
+- **APIs**: 
+  - Claude API (sentiment analysis)
+  - NewsData.io (article fetching)
+- **Visualization**: Recharts
+- **Data Export**: PapaParse
+- **Hosting**: Vercel (free tier)
+
+## Setup
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- API keys:
+  - [NewsData.io](https://newsdata.io) - Free tier (100 requests/day)
+  - [Anthropic Claude API](https://console.anthropic.com) - Free trial (~$5 credits)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd sentiment-dashboard
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   Edit `.env.local` and add your API keys:
+   ```
+   NEWSDATA_API_KEY=your_key_here
+   ANTHROPIC_API_KEY=your_key_here
+   ```
+
+4. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Project Structure
+
+```
+sentiment-dashboard/
+├── app/
+│   ├── page.js              # Home page with search form
+│   ├── layout.js            # Root layout
+│   ├── globals.css          # Tailwind styles
+│   └── api/
+│       ├── analyze/         # POST endpoint for sentiment analysis
+│       └── export/          # GET endpoint for CSV download
+├── lib/
+│   ├── newsData.js          # NewsData.io API client
+│   ├── claude.js            # Claude API client with batch processing
+│   ├── formatter.js         # Data formatting utilities
+│   └── types.ts             # TypeScript type definitions
+├── components/
+│   ├── SearchForm.jsx       # Search input form
+│   ├── Dashboard.jsx        # Main results display
+│   ├── SentimentChart.jsx   # Sentiment visualization
+│   ├── ArticleList.jsx      # Article cards
+│   └── LoadingSpinner.jsx   # Loading indicator
+├── .env.local.example       # Environment template
+├── tailwind.config.js       # Tailwind configuration
+├── next.config.js           # Next.js configuration
+└── README.md                # This file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Search for a topic** in the dashboard
+2. **View results** showing:
+   - Sentiment breakdown (positive/neutral/negative)
+   - Visual chart of sentiment distribution
+   - List of analyzed articles with sentiment badges
+   - Confidence scores for each sentiment
+3. **Export results** to CSV by clicking the Export button
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Reference
 
-## Learn More
+### POST `/api/analyze`
 
-To learn more about Next.js, take a look at the following resources:
+Fetches articles and analyzes their sentiment.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Request:**
+```json
+{
+  "topic": "AI in healthcare"
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Response:**
+```json
+{
+  "topic": "AI in healthcare",
+  "articles": [
+    {
+      "title": "...",
+      "source": "...",
+      "pubDate": "...",
+      "url": "...",
+      "sentiment": {
+        "sentiment": "positive",
+        "confidence": 0.94,
+        "summary": "..."
+      }
+    }
+  ],
+  "summary": {
+    "positive": 14,
+    "neutral": 6,
+    "negative": 4,
+    "positivePercent": 58,
+    "neutralPercent": 25,
+    "negativePercent": 17
+  },
+  "themes": ["AI accuracy", "Patient outcomes", "Ethics"]
+}
+```
 
-## Deploy on Vercel
+### GET `/api/export?topic=xyz`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Downloads analyzed results as a CSV file.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Response:** CSV file with columns:
+- Topic
+- Title
+- Source
+- Sentiment
+- Confidence
+- Publication Date
+- URL
+
+## Deployment
+
+### Deploy to Vercel
+
+1. **Push to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Set environment variables in Vercel dashboard:
+     - `NEWSDATA_API_KEY`
+     - `ANTHROPIC_API_KEY`
+
+3. **Deploy**
+   - Push to `main` branch for production deployment
+   - Push to other branches for preview deployments
+
+## Performance Notes
+
+- **Batch processing**: Articles are analyzed in groups of 4-5 to reduce API calls
+- **Token optimization**: Claude Haiku is used for cost efficiency
+- **Caching**: Results are cached client-side for instant re-analysis
+- **Rate limits**: NewsData.io free tier (100 requests/day), Claude API ($5 free)
+
+## Error Handling
+
+The application gracefully handles:
+- Missing API keys (displays helpful setup instructions)
+- API rate limits (shows user-friendly message)
+- Empty search results (displays "No articles found")
+- API timeouts (30-second timeout with error message)
+- Parse errors (continues with valid articles, skips failed ones)
+
+## Development
+
+### Available Scripts
+
+```bash
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run production build
+npm run start
+
+# Run linter
+npm run lint
+```
+
+## Free Tier Limits
+
+- **NewsData.io**: 100 API requests per day
+- **Anthropic Claude**: ~$5 free trial credits
+- **Vercel**: Unlimited deployments, serverless functions
+
+## License
+
+MIT License - feel free to use this project for your portfolio.
+
+## Support
+
+For API issues:
+- [NewsData.io Documentation](https://newsdata.io/docs)
+- [Anthropic Claude Docs](https://docs.anthropic.com)
+- [Next.js Documentation](https://nextjs.org/docs)
+
+---
+
+**Happy analyzing!** 🚀
