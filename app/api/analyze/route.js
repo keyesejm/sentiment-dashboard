@@ -1,6 +1,7 @@
 import { fetchArticles } from '@/lib/newsData';
 import { analyzeSentiment, extractThemes } from '@/lib/claude';
 import { calculateSentimentStats } from '@/lib/formatter';
+import { TRUSTED_DOMAINS } from '@/lib/trustedSources';
 
 // Simple rate limiting: track requests per IP, reset every minute
 const ipRequestCounts = new Map();
@@ -78,8 +79,8 @@ export async function POST(request) {
       );
     }
 
-    // Fetch articles
-    const { articles, error: fetchError } = await fetchArticles(topic.trim(), 20);
+    // Fetch articles with trusted source filtering
+    const { articles, error: fetchError, sourceFilter } = await fetchArticles(topic.trim(), 20, TRUSTED_DOMAINS);
 
     if (fetchError) {
       return Response.json(
@@ -123,6 +124,7 @@ export async function POST(request) {
         negativePercent: stats.negativePercent,
       },
       themes,
+      sourceFilter,
     };
 
     return Response.json(response);

@@ -98,7 +98,8 @@ export default function LearnPage() {
                 <h3 className="font-bold text-gray-900 mb-2">Step 1: Fetch Articles</h3>
                 <p className="text-gray-700 mb-2">
                   When you enter a topic (e.g., "AI"), the tool fetches up to 20 recent news
-                  articles from NewsData.io, a global news API.
+                  articles from NewsData.io, a global news API. Articles are filtered to only
+                  include trusted sources: Reuters, AP News, BBC, The Guardian, and WSJ.
                 </p>
                 <p className="text-sm text-gray-600">
                   <strong>Data collected:</strong> title, description, source, publication date,
