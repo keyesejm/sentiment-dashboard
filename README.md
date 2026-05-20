@@ -13,13 +13,12 @@ A full-stack web application that analyzes sentiment of news articles using Clau
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14, React 18, Tailwind CSS
+- **Frontend**: Next.js 16, React 19, Tailwind CSS
 - **Backend**: Next.js API Routes (serverless)
 - **APIs**: 
   - Claude API (sentiment analysis)
   - NewsData.io (article fetching)
 - **Visualization**: Recharts
-- **Data Export**: PapaParse
 - **Hosting**: Vercel (free tier)
 
 ## Setup
@@ -67,12 +66,12 @@ A full-stack web application that analyzes sentiment of news articles using Clau
 ```
 sentiment-dashboard/
 ├── app/
-│   ├── page.js              # Home page with search form
-│   ├── layout.js            # Root layout
+│   ├── page.tsx             # Home page with search form
+│   ├── layout.tsx           # Root layout
 │   ├── globals.css          # Tailwind styles
+│   ├── learn/page.tsx       # Knowledge base page
 │   └── api/
-│       ├── analyze/         # POST endpoint for sentiment analysis
-│       └── export/          # GET endpoint for CSV download
+│       └── analyze/         # POST endpoint for sentiment analysis
 ├── lib/
 │   ├── newsData.js          # NewsData.io API client
 │   ├── claude.js            # Claude API client with batch processing
@@ -83,10 +82,11 @@ sentiment-dashboard/
 │   ├── Dashboard.jsx        # Main results display
 │   ├── SentimentChart.jsx   # Sentiment visualization
 │   ├── ArticleList.jsx      # Article cards
+│   ├── ErrorMessage.jsx     # Error display
 │   └── LoadingSpinner.jsx   # Loading indicator
 ├── .env.local.example       # Environment template
 ├── tailwind.config.js       # Tailwind configuration
-├── next.config.js           # Next.js configuration
+├── next.config.ts           # Next.js configuration
 └── README.md                # This file
 ```
 
@@ -142,18 +142,6 @@ Fetches articles and analyzes their sentiment.
 }
 ```
 
-### GET `/api/export?topic=xyz`
-
-Downloads analyzed results as a CSV file.
-
-**Response:** CSV file with columns:
-- Topic
-- Title
-- Source
-- Sentiment
-- Confidence
-- Publication Date
-- URL
 
 ## Deployment
 
@@ -177,10 +165,10 @@ Downloads analyzed results as a CSV file.
 
 ## Performance Notes
 
-- **Batch processing**: Articles are analyzed in groups of 4-5 to reduce API calls
+- **Batch processing**: Articles are analyzed in parallel batches of 4 to reduce API latency
 - **Token optimization**: Claude Haiku is used for cost efficiency
-- **Caching**: Results are cached client-side for instant re-analysis
-- **Rate limits**: NewsData.io free tier (100 requests/day), Claude API ($5 free)
+- **Rate limiting**: Per-IP rate limit (10 requests/minute) to prevent API abuse
+- **API limits**: NewsData.io free tier (100 requests/day), Claude API ($5 free)
 
 ## Error Handling
 

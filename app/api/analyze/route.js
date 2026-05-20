@@ -1,9 +1,50 @@
 import { fetchArticles } from '@/lib/newsData';
 import { analyzeSentiment, extractThemes } from '@/lib/claude';
-import { calculateSentimentStats, generateSummary } from '@/lib/formatter';
+import { calculateSentimentStats } from '@/lib/formatter';
+
+// Simple rate limiting: track requests per IP, reset every minute
+const ipRequestCounts = new Map();
+const RATE_LIMIT_REQUESTS = 10;
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+
+function getClientIP(request) {
+  return request.headers.get('x-forwarded-for')?.split(',')[0] ||
+         request.headers.get('x-real-ip') ||
+         'unknown';
+}
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const record = ipRequestCounts.get(ip);
+
+  if (!record) {
+    ipRequestCounts.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return { allowed: true };
+  }
+
+  if (now > record.resetTime) {
+    ipRequestCounts.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return { allowed: true };
+  }
+
+  record.count++;
+  return { allowed: record.count <= RATE_LIMIT_REQUESTS, count: record.count };
+}
 
 export async function POST(request) {
   try {
+    // Check rate limit
+    const clientIP = getClientIP(request);
+    const { allowed, count } = checkRateLimit(clientIP);
+    if (!allowed) {
+      return Response.json(
+        {
+          error: `Rate limit exceeded. Maximum ${RATE_LIMIT_REQUESTS} requests per minute.`,
+        },
+        { status: 429 }
+      );
+    }
+
     // Parse request body
     const body = await request.json();
     const { topic } = body;
@@ -13,6 +54,15 @@ export async function POST(request) {
       return Response.json(
         {
           error: 'Topic is required and must be a non-empty string',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (topic.trim().length > 200) {
+      return Response.json(
+        {
+          error: 'Topic must be 200 characters or less',
         },
         { status: 400 }
       );
