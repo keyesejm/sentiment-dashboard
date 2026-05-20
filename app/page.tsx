@@ -15,6 +15,12 @@ export default function Home() {
                 Analyze news articles for sentiment using Claude AI
               </p>
             </div>
+            <a
+              href="/learn"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+            >
+              📚 Learn More
+            </a>
           </div>
         </div>
       </header>
