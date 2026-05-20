@@ -40,23 +40,18 @@ export default function LearnPage() {
               </a>
             </li>
             <li>
-              <a href="#architecture" className="hover:underline">
-                3. Technical Architecture
-              </a>
-            </li>
-            <li>
               <a href="#sentiment-types" className="hover:underline">
-                4. Types of Sentiment
+                3. Types of Sentiment
               </a>
             </li>
             <li>
               <a href="#limitations" className="hover:underline">
-                5. Limitations & Considerations
+                4. Limitations & Considerations
               </a>
             </li>
             <li>
               <a href="#use-cases" className="hover:underline">
-                6. Use Cases
+                5. Use Cases
               </a>
             </li>
           </ul>
@@ -173,64 +168,10 @@ export default function LearnPage() {
           </div>
         </section>
 
+
         {/* Section 3 */}
-        <section id="architecture" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Technical Architecture</h2>
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <p className="text-gray-700 mb-6">
-              This tool is built with modern web technologies and AI APIs:
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 p-4 rounded border border-gray-200">
-                <h4 className="font-bold text-gray-900 mb-2">Frontend</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>Next.js:</strong> React framework</li>
-                  <li>• <strong>Tailwind CSS:</strong> Styling</li>
-                  <li>• <strong>Recharts:</strong> Data visualization</li>
-                </ul>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded border border-gray-200">
-                <h4 className="font-bold text-gray-900 mb-2">Backend</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>Next.js API Routes:</strong> Server endpoints</li>
-                  <li>• <strong>Node.js:</strong> Runtime</li>
-                  <li>• <strong>Vercel:</strong> Hosting & deployment</li>
-                </ul>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded border border-gray-200">
-                <h4 className="font-bold text-gray-900 mb-2">External APIs</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>NewsData.io:</strong> Article fetching</li>
-                  <li>• <strong>Anthropic Claude:</strong> Sentiment analysis</li>
-                </ul>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded border border-gray-200">
-                <h4 className="font-bold text-gray-900 mb-2">Data Flow</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  <li>1. User enters topic</li>
-                  <li>2. Backend fetches articles</li>
-                  <li>3. Claude analyzes sentiment</li>
-                  <li>4. Results returned to frontend</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-6 bg-blue-50 border border-blue-200 p-4 rounded">
-              <p className="text-sm text-blue-900">
-                <strong>Note:</strong> All processing happens server-side. Your API keys for
-                NewsData.io and Claude never leave the server, ensuring security.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 4 */}
         <section id="sentiment-types" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Types of Sentiment</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Types of Sentiment</h2>
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-green-50 rounded border border-green-200">
@@ -269,9 +210,9 @@ export default function LearnPage() {
           </div>
         </section>
 
-        {/* Section 5 */}
+        {/* Section 4 */}
         <section id="limitations" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Limitations & Considerations</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Limitations & Considerations</h2>
           <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
             <div className="border-l-4 border-yellow-500 pl-4">
               <h4 className="font-bold text-gray-900 mb-2">Sarcasm & Irony</h4>
@@ -314,9 +255,9 @@ export default function LearnPage() {
           </div>
         </section>
 
-        {/* Section 6 */}
+        {/* Section 5 */}
         <section id="use-cases" className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Use Cases</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Use Cases</h2>
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <p className="text-gray-700 mb-6">
               This tool can be applied in various scenarios:
